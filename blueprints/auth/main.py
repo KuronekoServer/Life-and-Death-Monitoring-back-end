@@ -1,5 +1,5 @@
 from httpx import AsyncClient
-from sanic import Blueprint, Sanic, response
+from sanic import Blueprint, response
 
 
 bp = Blueprint("auth", url_prefix="/api/auth")
