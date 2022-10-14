@@ -1,0 +1,5 @@
+sanic
+discord.py
+toml
+httpx
+aiomysql
