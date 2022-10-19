@@ -1,4 +1,4 @@
-FROM python:3.10.7
+FROM python:3.10.8
 
 WORKDIR /app
 
@@ -9,5 +9,6 @@ RUN pip install -r requirements.txt
 # Copy source code
 COPY . .
 
+EXPOSE 8080
 # Run the app
 CMD ["python", "app.py"]
