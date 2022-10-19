@@ -6,3 +6,11 @@ ping,port,Heartbeat,UDP,TCP
 ## その他
 APIと別々に分けてもよい。
 レポジトリ名はLife-and-Death-Monitoring-APIとして作ってください。
+
+## Todo
+
+- [ ] ログイン機能
+- [ ] ステータス
+  - [ ] heartbeat
+  - [ ] ping
+  - [ ] http
