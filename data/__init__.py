@@ -4,8 +4,11 @@ from typing import TypedDict
 
 
 class Config(TypedDict):
-    sanic: dict
-    mysql: dict
+    fastapi: dict
+    db_url: str
+    debug: bool
+    github: dict
+    frontend: dict
 
 
 with open("config.toml", "r") as f:
