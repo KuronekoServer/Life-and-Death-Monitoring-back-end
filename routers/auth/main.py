@@ -23,7 +23,9 @@ def make_token():
 @router.on_event("startup")
 async def startup():
     "Prepare the accounts table."
-    await Account(router.pool).prepare_table()
+    async with router.pool.acquire() as conn:
+        async with conn.cursor() as cursor:
+            await Account(cursor).prepare_table()
 
 
 @router.get("/login")
@@ -37,7 +39,7 @@ async def login():
     )
 
 @router.get("/callback")
-async def callback(req: Request, code: str | None = Query(default=None)):
+async def callback(code: str | None = Query(default=None)):
     "Callback for the login page."
     if code is None:
         raise HTTPException(status_code=400, detail="Missing code")
@@ -54,8 +56,16 @@ async def callback(req: Request, code: str | None = Query(default=None)):
         "Authorization": f"Bearer {response.json()['access_token']}"
     })
     response.raise_for_status()
-    account = Account(req.app.state.pool)
-    await account.create_account(response.json()["id"], response.json()["login"], make_token())
+    async with router.pool.acquire() as conn:
+        async with conn.cursor() as cursor:
+            account = Account(cursor)
+            if (row := await account.get_user(response.json()["id"])) is None:
+                token = make_token()
+                await account.create_account(
+                    response.json()["id"], response.json()["login"], token
+                )
+            else:
+                token = row[2]
     res = RedirectResponse(CONFIG["frontend"]["url"])
-    res.set_cookie("token", make_token())
+    res.set_cookie("token", token)
     return res
