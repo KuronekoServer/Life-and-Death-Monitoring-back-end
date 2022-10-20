@@ -8,6 +8,6 @@
 
 GithubのOauth2画面に自動的にリダイレクトしてくれます。
 
-## GET /api/auth/@me (未実装)
+## GET /api/auth/@me
 
 現在のアクセスしているアカウントを返します。
