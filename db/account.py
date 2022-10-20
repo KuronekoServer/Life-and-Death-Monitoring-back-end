@@ -25,3 +25,10 @@ class Account:
             "SELECT * FROM accounts WHERE id = %s;", (userid,)
         )
         return await self.cursor.fetchone()
+    
+    async def get_account(self, token: str):
+        "Gets an account."
+        await self.cursor.execute(
+            "SELECT * FROM accounts WHERE token = %s;", (token,)
+        )
+        return await self.cursor.fetchone()

@@ -33,4 +33,7 @@ async def shutdown():
 
 
 if __name__ == "__main__":
-    run("app:app", host=CONFIG["fastapi"]["host"], port=CONFIG["fastapi"]["port"], reload=CONFIG["debug"])
+    run(
+        "app:app", host=CONFIG["fastapi"]["host"],
+        port=CONFIG["fastapi"]["port"], reload=CONFIG["debug"]
+    )

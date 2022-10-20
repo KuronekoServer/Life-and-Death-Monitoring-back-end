@@ -1,9 +1,8 @@
 from httpx import AsyncClient
-from .db import Account
+from db.account import Account
 
-from fastapi import Query, HTTPException
+from fastapi import Query, HTTPException, Cookie
 from fastapi.responses import RedirectResponse
-from fastapi.requests import Request
 
 from data import CONFIG
 from core import Router
@@ -69,3 +68,18 @@ async def callback(code: str | None = Query(default=None)):
     res = RedirectResponse(CONFIG["frontend"]["url"])
     res.set_cookie("token", token)
     return res
+
+@router.get("/@me")
+async def get_current_user(token: str = Cookie(None)):
+    "Get the current user."
+    if token is None:
+        raise HTTPException(status_code=401, detail="Missing token")
+    async with router.pool.acquire() as conn:
+        async with conn.cursor() as cursor:
+            account = Account(cursor)
+            if (user := await account.get_account(token)) is None:
+                raise HTTPException(status_code=401, detail="Invalid token")
+            return {
+                "id": user[0],
+                "username": user[1]
+            }
